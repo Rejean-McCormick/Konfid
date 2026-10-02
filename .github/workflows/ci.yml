@@ -82,7 +82,7 @@ jobs:
       - run: pip-audit --strict
       - name: Generate CycloneDX SBOM
         run: pip-audit --strict --format cyclonedx-json > sbom.cdx.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: konfid-sbom
           path: sbom.cdx.json
