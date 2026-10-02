@@ -1,0 +1,14 @@
+policy_id: response-freeze-tenant
+version: 12
+operation: FREEZE_TENANT
+threshold:
+  required: 2
+  pool_size_minimum: 3
+constraints:
+  distinct_humans: true
+  requester_may_approve: false
+  operator_may_approve: false
+  required_assurance: phishing_resistant
+  max_auth_age_seconds: 300
+  approval_ttl_seconds: 900
+  justification_required: true

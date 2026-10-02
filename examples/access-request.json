@@ -1,0 +1,19 @@
+{
+  "request_id": "AR-0001",
+  "actor": "P123",
+  "action": "employee.export",
+  "resource": {
+    "owner": "konnaxion",
+    "class": "HR.EMPLOYEE.MEDICAL",
+    "selector": "project:X"
+  },
+  "scope": {
+    "organization": "ABC",
+    "project": "X"
+  },
+  "context": {
+    "auth_assurance": "phishing_resistant",
+    "auth_age_seconds": 80,
+    "requested_count": 240
+  }
+}

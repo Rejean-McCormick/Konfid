@@ -1,0 +1,10 @@
+{
+  "action_id": "ACT-7819",
+  "operation": "ISOLATE_SERVICE",
+  "target": "service:payments-worker-3",
+  "tenant": "ABC",
+  "decision_ref": "PD-992",
+  "approval_set_digest": "sha256:...",
+  "expires_at": "2026-10-02T03:00:00Z",
+  "idempotency_key": "konfid-ACT-7819"
+}

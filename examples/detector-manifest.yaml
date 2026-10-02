@@ -1,0 +1,16 @@
+detector_id: bulk-sensitive-read
+version: 17
+owner: security-engineering
+input_schema: konfid.security.event/v1
+output_schema: konfid.risk-signal/v1
+runtime:
+  enforcement_credentials: forbidden
+  max_cpu: bounded
+  max_memory: bounded
+rollout:
+  state: shadow
+  rollback_to: 16
+assurance:
+  securitydiag_required: true
+  historical_replay_required: true
+  canary_required: true
