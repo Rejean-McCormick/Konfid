@@ -1,7 +1,7 @@
 # Runtime dependency lock for the reference Linux production image.
 # Regenerate deliberately after dependency/security review; do not "float" this
 # file during a production rebuild.
-alembic==1.18.4
+alembic==1.20.0
 annotated-doc==0.0.4
 annotated-types==0.7.0
 anyio==4.13.0
