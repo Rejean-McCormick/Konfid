@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: konfid-config
+data:
+  KONFID_ENV: production
+  KONFID_DEV_MODE: "false"
+  KONFID_POLICY_MODE: koa
+  KONFID_REQUIRE_ACTOR_ASSERTION: "true"
+  KONFID_REQUIRE_ACTOR_AUTHORIZED_PARTY: "true"
+  KONFID_REQUIRE_SCHEMA_HEAD: "true"
+  KONFID_DOCS_ENABLED: "false"
+  KONFID_RATE_LIMIT_ENABLED: "true"
+  KONFID_METRICS_ENABLED: "true"
+  KONFID_TRUSTED_HOSTS: '["konfid.internal"]'
+  KONFID_WORKLOAD_ISSUER: https://identity.example/workloads
+  KONFID_WORKLOAD_AUDIENCE: konfid-api
+  KONFID_WORKLOAD_JWKS_URL: https://identity.example/workloads/.well-known/jwks.json
+  KONFID_ACTOR_ISSUER: https://identity.example/actors
+  KONFID_ACTOR_AUDIENCE: konfid-actor
+  KONFID_ACTOR_JWKS_URL: https://identity.example/actors/.well-known/jwks.json
+  KONFID_KOA_POLICY_URL: https://koa-policy.internal
+  KONFID_KOA_AUDIT_URL: https://koa-audit.internal
+  KONFID_INTERACTION_KERNEL_URL: https://interaction-kernel.internal
+  KONFID_ORGO_URL: https://orgo.internal
+  KONFID_ORGO_ORGANIZATION_ID: REPLACE_ME
+  KONFID_OUTBOUND_CA_BUNDLE: /run/konfid-tls/ca.pem
+  KONFID_KOA_POLICY_BEARER_TOKEN_FILE: /run/konfid-secrets/koa_policy_token
+  KONFID_KOA_AUDIT_BEARER_TOKEN_FILE: /run/konfid-secrets/koa_audit_token
+  KONFID_INTERACTION_KERNEL_BEARER_TOKEN_FILE: /run/konfid-secrets/interaction_kernel_token
+  KONFID_ORGO_BEARER_TOKEN_FILE: /run/konfid-secrets/orgo_token
+  KONFID_METRICS_TOKEN_FILE: /run/konfid-secrets/metrics_token

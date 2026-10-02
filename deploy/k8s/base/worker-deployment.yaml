@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: konfid-worker
+  labels: {app.kubernetes.io/component: worker}
+spec:
+  revisionHistoryLimit: 5
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: {maxUnavailable: 1, maxSurge: 1}
+  selector:
+    matchLabels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: worker}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: worker}
+    spec:
+      serviceAccountName: konfid
+      automountServiceAccountToken: false
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: worker}
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: worker}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: worker}
+      terminationGracePeriodSeconds: 45
+      securityContext:
+        seccompProfile: {type: RuntimeDefault}
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: worker
+          image: ghcr.io/REPLACE_ME/konfid@sha256:0000000000000000000000000000000000000000000000000000000000000000
+          imagePullPolicy: IfNotPresent
+          args: ["konfid","worker","--interval","1"]
+          envFrom:
+            - configMapRef: {name: konfid-config}
+          env:
+            - name: KONFID_INSTANCE_ID
+              valueFrom: {fieldRef: {fieldPath: metadata.name}}
+            - name: KONFID_DATABASE_URL
+              valueFrom: {secretKeyRef: {name: konfid-runtime-secrets, key: database_url}}
+          volumeMounts:
+            - {name: secrets, mountPath: /run/konfid-secrets, readOnly: true}
+            - {name: tls, mountPath: /run/konfid-tls, readOnly: true}
+            - {name: tmp, mountPath: /tmp}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: ["ALL"]}
+          resources:
+            requests: {cpu: 200m, memory: 256Mi}
+            limits: {cpu: "2", memory: 1Gi}
+      volumes:
+        - name: secrets
+          secret: {secretName: konfid-runtime-secrets, defaultMode: 0400}
+        - name: tls
+          secret: {secretName: konfid-outbound-tls, defaultMode: 0400}
+        - name: tmp
+          emptyDir: {sizeLimit: 64Mi}

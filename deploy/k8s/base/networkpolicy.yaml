@@ -1,0 +1,53 @@
+# Base policy is intentionally fail-closed. Production clusters must route
+# outbound HTTPS/PostgreSQL through namespaces explicitly labelled
+# `konfid-egress-access=allowed` (for example an egress gateway and database
+# namespace). This avoids silent general-internet egress from a security plane.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: konfid-default-deny
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/name: konfid}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: konfid-api-ingress
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: api}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              konfid-network-access: allowed
+      ports:
+        - {protocol: TCP, port: 8080}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: konfid-egress
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/name: konfid}
+  policyTypes: [Egress]
+  egress:
+    # DNS only. Adjust labels for the cluster DNS implementation if required.
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: kube-system}
+      ports:
+        - {protocol: UDP, port: 53}
+        - {protocol: TCP, port: 53}
+    # Security dependencies and PostgreSQL must be reachable through explicitly
+    # approved namespaces / egress gateways.
+    - to:
+        - namespaceSelector:
+            matchLabels: {konfid-egress-access: allowed}
+      ports:
+        - {protocol: TCP, port: 443}
+        - {protocol: TCP, port: 5432}

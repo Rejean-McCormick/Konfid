@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: konfid-api
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: api}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: konfid-worker
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: worker}

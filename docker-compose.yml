@@ -1,0 +1,63 @@
+# Development-only composition. Production deployments must use external secret
+# management, TLS, PostgreSQL backups/HA, workload identity and network policy.
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: konfid
+      POSTGRES_USER: konfid
+      POSTGRES_PASSWORD: dev-change-me
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U konfid -d konfid"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - konfid-pg:/var/lib/postgresql/data
+
+  migrator:
+    build: .
+    command: ["alembic", "upgrade", "head"]
+    environment: &dev-env
+      KONFID_ENV: development
+      KONFID_DATABASE_URL: postgresql+psycopg://konfid:dev-change-me@postgres:5432/konfid
+      KONFID_DEV_MODE: "true"
+      KONFID_DEV_SIGNING_SECRET: dev-only-change-this-secret-1234567890
+      KONFID_POLICY_MODE: local
+    depends_on:
+      postgres:
+        condition: service_healthy
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+
+  api:
+    build: .
+    environment: *dev-env
+    ports: ["8080:8080"]
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+    read_only: true
+    tmpfs: ["/tmp"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/live', timeout=2).read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  worker:
+    build: .
+    command: ["konfid", "worker", "--interval", "1"]
+    environment: *dev-env
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+    read_only: true
+    tmpfs: ["/tmp"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+
+volumes:
+  konfid-pg:

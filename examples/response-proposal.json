@@ -1,0 +1,10 @@
+{
+  "tenant": "demo",
+  "requester_principal": "P-security-operator",
+  "risk_signal_ids": ["RS-example"],
+  "target": "tenant:demo",
+  "scope": {"organization": "demo"},
+  "requested_operation": "FREEZE_TENANT",
+  "rationale": "Confirmed credential compromise with active data exfiltration indicators",
+  "idempotency_key": "incident-2026-0001-freeze-tenant"
+}

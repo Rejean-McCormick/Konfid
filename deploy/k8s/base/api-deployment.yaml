@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: konfid-api
+  labels: {app.kubernetes.io/component: api}
+spec:
+  revisionHistoryLimit: 5
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: {maxUnavailable: 0, maxSurge: 1}
+  minReadySeconds: 10
+  selector:
+    matchLabels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: api}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: api}
+    spec:
+      serviceAccountName: konfid
+      automountServiceAccountToken: false
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: api}
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: api}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels: {app.kubernetes.io/name: konfid, app.kubernetes.io/component: api}
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        seccompProfile: {type: RuntimeDefault}
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: api
+          image: ghcr.io/REPLACE_ME/konfid@sha256:0000000000000000000000000000000000000000000000000000000000000000
+          imagePullPolicy: IfNotPresent
+          args: ["uvicorn","konfid.app:app","--host","0.0.0.0","--port","8080","--no-server-header","--workers","1","--http","h11","--h11-max-incomplete-event-size","65536","--limit-concurrency","1000","--backlog","2048","--timeout-keep-alive","5","--timeout-graceful-shutdown","30"]
+          ports:
+            - {name: http, containerPort: 8080, protocol: TCP}
+          envFrom:
+            - configMapRef: {name: konfid-config}
+          env:
+            - name: KONFID_INSTANCE_ID
+              valueFrom: {fieldRef: {fieldPath: metadata.name}}
+            - name: KONFID_DATABASE_URL
+              valueFrom: {secretKeyRef: {name: konfid-runtime-secrets, key: database_url}}
+          volumeMounts:
+            - {name: secrets, mountPath: /run/konfid-secrets, readOnly: true}
+            - {name: tls, mountPath: /run/konfid-tls, readOnly: true}
+            - {name: tmp, mountPath: /tmp}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: ["ALL"]}
+          resources:
+            requests: {cpu: 250m, memory: 256Mi}
+            limits: {cpu: "2", memory: 1Gi}
+          startupProbe:
+            httpGet: {path: /live, port: http}
+            periodSeconds: 2
+            failureThreshold: 30
+          readinessProbe:
+            httpGet: {path: /v1/ready, port: http}
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet: {path: /live, port: http}
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 3
+      volumes:
+        - name: secrets
+          secret: {secretName: konfid-runtime-secrets, defaultMode: 0400}
+        - name: tls
+          secret: {secretName: konfid-outbound-tls, defaultMode: 0400}
+        - name: tmp
+          emptyDir: {sizeLimit: 64Mi}

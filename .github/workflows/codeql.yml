@@ -1,0 +1,35 @@
+name: codeql
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '17 4 * * 2'
+
+permissions:
+  contents: read
+  security-events: write
+  packages: read
+
+env:
+  PYTHON_VERSION: '3.13'
+
+jobs:
+  analyze:
+    name: CodeQL (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: python
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+      - run: python -m pip install --upgrade pip
+      - run: pip install -c constraints/production-linux.txt -e '.[postgres]'
+      - uses: github/codeql-action/analyze@v4
+        with:
+          category: '/language:python'

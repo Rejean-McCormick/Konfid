@@ -1,0 +1,11 @@
+{
+  "tenant": "demo",
+  "detector_id": "bulk-sensitive-read",
+  "version": "17",
+  "input_schema": "konfid.security.event/v1",
+  "owner": "security-engineering",
+  "state": "SHADOW",
+  "rollout": {"mode": "shadow"},
+  "package_digest": "sha256:REPLACE_ME",
+  "qualification_ref": null
+}

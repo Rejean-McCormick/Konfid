@@ -1,19 +1,17 @@
 {
   "request_id": "AR-0001",
-  "actor": "P123",
-  "action": "employee.export",
+  "tenant": "demo",
+  "actor": "P-example",
+  "action": "employee.read",
   "resource": {
     "owner": "konnaxion",
-    "class": "HR.EMPLOYEE.MEDICAL",
-    "selector": "project:X"
+    "class": "HR.EMPLOYEE.BASIC",
+    "selector": "employee:42"
   },
-  "scope": {
-    "organization": "ABC",
-    "project": "X"
-  },
+  "scope": {"organization": "demo"},
   "context": {
     "auth_assurance": "phishing_resistant",
-    "auth_age_seconds": 80,
-    "requested_count": 240
+    "auth_age_seconds": 60,
+    "requested_count": 1
   }
 }

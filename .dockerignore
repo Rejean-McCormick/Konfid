@@ -1,0 +1,16 @@
+.git
+.github
+.pytest_cache
+__pycache__
+*.py[cod]
+*.db
+.env
+.env.*
+!.env.example
+!.env.production.example
+.venv
+build
+dist
+*.egg-info
+coverage.xml
+htmlcov

@@ -1,0 +1,45 @@
+# Run this as a controlled pre-deploy Job using the exact immutable image digest.
+# The zero digest is intentionally non-runnable until replaced.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: konfid-migrate-REPLACE_ME
+spec:
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccountName: konfid
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile: {type: RuntimeDefault}
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+      containers:
+        - name: migrate
+          image: ghcr.io/REPLACE_ME/konfid@sha256:0000000000000000000000000000000000000000000000000000000000000000
+          command: ["alembic","upgrade","head"]
+          envFrom: [{configMapRef: {name: konfid-config}}]
+          env:
+            - name: KONFID_DATABASE_URL
+              valueFrom: {secretKeyRef: {name: konfid-runtime-secrets, key: database_url}}
+          volumeMounts:
+            - {name: secrets, mountPath: /run/konfid-secrets, readOnly: true}
+            - {name: tls, mountPath: /run/konfid-tls, readOnly: true}
+            - {name: tmp, mountPath: /tmp}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: ["ALL"]}
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: "1", memory: 512Mi}
+      volumes:
+        - name: secrets
+          secret: {secretName: konfid-runtime-secrets, defaultMode: 0400}
+        - name: tls
+          secret: {secretName: konfid-outbound-tls, defaultMode: 0400}
+        - name: tmp
+          emptyDir: {sizeLimit: 64Mi}

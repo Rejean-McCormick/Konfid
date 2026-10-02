@@ -1,0 +1,14 @@
+{
+  "tenant": "demo",
+  "operation": "FREEZE_TENANT",
+  "threshold": 2,
+  "eligible_roles": ["SECURITY_EXECUTIVE"],
+  "distinct_humans": true,
+  "requester_may_approve": false,
+  "operator_may_approve": false,
+  "required_assurance": "phishing_resistant",
+  "max_auth_age_seconds": 300,
+  "approval_ttl_seconds": 900,
+  "justification_required": true,
+  "version": "1"
+}
