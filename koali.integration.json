@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "productId": "konfid",
+  "owner": "Konfid",
+  "variables": {
+    "apiPort": { "type": "port", "env": "KOALI_KONFID_PORT", "default": 8301 }
+  },
+  "surface": { "mode": "headless" },
+  "processes": [
+    {
+      "id": "api",
+      "cwd": ".",
+      "command": { "win32": ".venv\\Scripts\\python.exe", "default": ".venv/bin/python" },
+      "args": ["-m", "uvicorn", "konfid.app:app", "--host", "127.0.0.1", "--port", "${apiPort}", "--no-access-log"],
+      "env": {
+        "KONFID_ENV": "development",
+        "KONFID_DEV_MODE": "true",
+        "KONFID_DATABASE_URL": "sqlite:///./.koali-konfid.db",
+        "KONFID_POLICY_MODE": "local",
+        "KONFID_DOCS_ENABLED": "true"
+      },
+      "probeId": "ready"
+    },
+    {
+      "id": "worker",
+      "cwd": ".",
+      "command": { "win32": ".venv\\Scripts\\konfid.exe", "default": ".venv/bin/konfid" },
+      "args": ["worker", "--interval", "1"],
+      "env": {
+        "KONFID_ENV": "development",
+        "KONFID_DEV_MODE": "true",
+        "KONFID_DATABASE_URL": "sqlite:///./.koali-konfid.db",
+        "KONFID_POLICY_MODE": "local"
+      }
+    }
+  ],
+  "probes": [
+    { "id": "live", "url": "http://127.0.0.1:${apiPort}/live", "required": true, "statuses": [200], "timeoutMs": 2000 },
+    { "id": "ready", "url": "http://127.0.0.1:${apiPort}/v1/ready", "required": true, "statuses": [200], "timeoutMs": 3000 }
+  ]
+}

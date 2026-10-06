@@ -101,15 +101,6 @@ def main():
         if not ok:
             raise SystemExit(2)
     elif args.cmd == "worker":
-        # Development workers must be independently bootable on a fresh local
-        # SQLite database. The API lifespan performs the same initialization,
-        # but API and worker are separate processes and can start in either order.
-        if settings.dev_mode:
-            init_db()
-        else:
-            ok, reason = database_ready()
-            if not ok:
-                raise SystemExit(f"database not ready: {reason}")
         interval = args.interval if args.interval is not None else settings.worker_interval_seconds
         worker_id = _worker_id()
         signal.signal(signal.SIGTERM, _stop)
