@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.7
-FROM python:3.13-slim AS builder
+FROM python:3.14-slim AS builder
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1 \
     VIRTUAL_ENV=/opt/venv \
@@ -15,7 +15,7 @@ RUN python -m pip install --upgrade "pip==26.2.1" "build==1.6.1" \
     && python -m pip install -c constraints/production-linux.txt "${WHEEL}[postgres]" \
     && python -m pip uninstall -y pip setuptools wheel
 
-FROM python:3.13-slim AS runtime
+FROM python:3.14-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     VIRTUAL_ENV=/opt/venv \
