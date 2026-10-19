@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -19,6 +19,27 @@ ASSURANCE_ORDER = {"unknown": 0, "password": 1, "mfa": 2, "phishing_resistant": 
 _ACCESS_DECISIONS = {"ALLOW", "DENY", "BLOCKED", "STEP_UP_REQUIRED", "APPROVAL_REQUIRED"}
 _CONTROL_DECISIONS = {"ALLOW", "DENY", "BLOCKED"}
 _RESPONSE_DECISIONS = {"ALLOW", "DENY", "BLOCKED", "STEP_UP_REQUIRED", "APPROVAL_REQUIRED"}
+
+# A positive decision must not outlive its short-lived policy evaluation.
+# A missing, stale, naive, or excessively distant expiry is NOT a cacheable ALLOW.
+MAX_KOA_ALLOW_TTL_SECONDS = 60
+
+
+def _validate_koa_access_result(result: AccessResponse) -> None:
+    if not result.decision_id or not result.policy or len(result.decision_id) > 256 or len(result.policy) > 256:
+        raise ValueError("POLICY_REFERENCE_INVALID")
+    if len(result.reason_codes) > 64 or any(
+        not isinstance(item, str) or not item or len(item) > 128 for item in result.reason_codes
+    ):
+        raise ValueError("POLICY_REASON_CODES_INVALID")
+    if result.decision != "ALLOW":
+        return
+    expires = result.valid_until
+    if expires is None or expires.tzinfo is None or expires.utcoffset() is None:
+        raise ValueError("POLICY_ALLOW_EXPIRY_REQUIRED")
+    ttl = (expires.astimezone(timezone.utc) - datetime.now(timezone.utc)).total_seconds()
+    if not (0 < ttl <= MAX_KOA_ALLOW_TTL_SECONDS):
+        raise ValueError("POLICY_ALLOW_EXPIRY_INVALID")
 
 
 def _simple_policy_result(value: dict, allowed: set[str]) -> tuple[str, list[str]]:
@@ -226,10 +247,7 @@ class KoaPolicyEngine(PolicyEngine):
             )
             if result.decision not in _ACCESS_DECISIONS:
                 raise ValueError("POLICY_DECISION_INVALID")
-            if len(result.reason_codes) > 64 or any(
-                not isinstance(item, str) or not item or len(item) > 128 for item in result.reason_codes
-            ):
-                raise ValueError("POLICY_REASON_CODES_INVALID")
+            _validate_koa_access_result(result)
         except UpstreamUnavailable:
             result = AccessResponse(
                 decision_id=new_id("PD"), decision="BLOCKED", policy="koa/unavailable",

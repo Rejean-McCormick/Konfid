@@ -1,0 +1,22 @@
+{
+  "README.md": {
+    "baseline": "72284c34dabae93f99b09ecccc281963b9f3be60f4ad6f074675294eb3d4f329",
+    "updated": "b0a800f5268fcc0770356356993a0d0c8d683520e0d127763ba09e84b6bcd3ff"
+  },
+  "docs/INTEGRATIONS.md": {
+    "baseline": "0363ca3ca736385fb2e6f0047f58e2da2d69b5ec66055264efc93a59a41664fa",
+    "updated": "dd6a45fd215a38f7239dfc91761b2f987670f4d9e27f84672c3bcd11c3303c0d"
+  },
+  "docs/TANDEM_TOUR_KONFID_2026-10-18.md": {
+    "baseline": null,
+    "updated": "e71e209e1f1a12b888dd9d7d8760d80faae7d212d0d2c27f35d020ee6a00adaf"
+  },
+  "src/konfid/adapters/policy.py": {
+    "baseline": "b102b8809a912a1a88af72a53dfb2acbefb976bd4258f25ceab48f8fddc6b8d5",
+    "updated": "58eff16ab7376392101ee5a43ea9209544171580889ac19cce9ff879c20faed4"
+  },
+  "tests/test_tandem_koa_allow_ttl.py": {
+    "baseline": null,
+    "updated": "6566a88e87834ccfb3694232ca94f85761a87ef36f582a69c8307fd524e1ba7c"
+  }
+}

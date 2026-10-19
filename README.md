@@ -155,3 +155,7 @@ docs/             architecture, threat model, production, and runbook
 
 No single component should be able to **identify + authorize + detect + approve + execute + erase the proof**
 of a critical action.
+
+## Tandem security tour (2026-10-18)
+
+The scoped kOA access-decision lifetime hardening and remaining FakePlant integration gates are documented in [docs/TANDEM_TOUR_KONFID_2026-10-18.md](docs/TANDEM_TOUR_KONFID_2026-10-18.md). This is a source-only patch, not deployment or GO LIVE authorization.

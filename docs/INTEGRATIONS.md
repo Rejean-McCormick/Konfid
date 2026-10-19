@@ -12,7 +12,7 @@ Orgo failure cannot disable automatic revoke/deny operations that policy allows 
 
 ## kOA Governance Policy Runtime
 
-Production requires `KONFID_POLICY_MODE=koa`. Konfid submits canonical access/response context and consumes structured decisions. Policy service failure does not fall back to the local development engine.
+Production requires `KONFID_POLICY_MODE=koa`. Konfid submits canonical access/response context and consumes structured decisions. Policy service failure does not fall back to the local development engine. **An access `ALLOW` from kOA must have a nonempty decision/policy reference and an explicit timezone-aware `valid_until` strictly in the future and no more than 60 seconds away**. Missing, stale, naive or excessive positive-decision lifetimes are treated as `BLOCKED`, not as unbounded permissions. A `DENY` does not require an expiry.
 
 ## kOA Audit Broker
 
