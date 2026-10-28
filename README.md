@@ -159,3 +159,8 @@ of a critical action.
 ## Tandem security tour (2026-10-18)
 
 The scoped kOA access-decision lifetime hardening and remaining FakePlant integration gates are documented in [docs/TANDEM_TOUR_KONFID_2026-10-18.md](docs/TANDEM_TOUR_KONFID_2026-10-18.md). This is a source-only patch, not deployment or GO LIVE authorization.
+
+## Vérification des intégrations satellites (27 octobre 2026)
+
+Voir [le contrôle de compatibilité et les limites de qualification](docs/Integration-Verification-2026-10-27.md). Les versions et statuts externes doivent être vérifiés avant tout déploiement.
+
