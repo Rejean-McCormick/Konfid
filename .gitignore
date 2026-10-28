@@ -13,3 +13,6 @@ build/
 .DS_Store
 ZmartZnap.pyw
 GitSink.bat
+
+# kOA : exclusions ajoutées après audit
+*.tmp
