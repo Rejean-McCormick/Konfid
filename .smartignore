@@ -1,0 +1,13 @@
+# SmartDump safety: do not collect mutable local database or operational state.
+*.db
+*.db-wal
+*.db-shm
+*.sqlite*
+.koali-update-backups/
+.pytest_cache/
+__pycache__/
+.venv/
+.env
+.env.*
+!.env.example
+!.env.production.example

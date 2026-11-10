@@ -1,5 +1,7 @@
 # Konfid
 
+> **Branch 08 target-system alignment:** see [docs/BRANCH08_POLICY_BRIDGE.md](docs/BRANCH08_POLICY_BRIDGE.md) for verified local interoperability tests, explicit authority boundaries, and unresolved deployment gates. This note does not confer release or host permissions.
+
 **Konfid is a cross-system security control plane for identity bindings, scoped authorization,
 risk detection, governed containment, approvals, and auditable response.** It integrates with
 existing IdPs, kOA, Orgo, Konnaxion, and trusted enforcement agents without becoming a

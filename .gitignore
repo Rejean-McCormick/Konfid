@@ -16,3 +16,9 @@ GitSink.bat
 
 # kOA : exclusions ajoutées après audit
 *.tmp
+
+# SQLite sidecars are runtime state, not distributable source.
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm

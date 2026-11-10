@@ -1,0 +1,117 @@
+SMART DUMPER INDEX
+==================
+generated_at: 2026-11-09T16:34:29.828885
+source_root: C:\mycode\Konfid\konfid
+mode: snapshot
+zip_file: konfid_Code_snapshot.zip
+embedded_index: SMARTDUMP_INDEX.txt
+file_count: 104
+total_bytes: 1763125
+compression: ZIP_DEFLATED level 1
+
+FILES
+-----
+.dockerignore	154 bytes
+.env.example	741 bytes
+.env.production.example	3600 bytes
+.github/dependabot.yml	298 bytes
+.github/workflows/ci.yml	3169 bytes
+.github/workflows/codeql.yml	776 bytes
+.gitignore	194 bytes
+.koali-konfid.db-shm	32768 bytes
+.koali-konfid.db-wal	1223672 bytes
+.koali-update-backups/worker-db-init-20261005-194655/ROLLBACK_KONFID_WORKER_FIX.pyw	928 bytes
+.koali-update-backups/worker-db-init-20261005-194655/src/konfid/cli.py	4256 bytes
+alembic.ini	572 bytes
+constraints/production-linux.txt	722 bytes
+deploy/k8s/base/api-deployment.yaml	3683 bytes
+deploy/k8s/base/configmap.yaml	1453 bytes
+deploy/k8s/base/hpa.yaml	394 bytes
+deploy/k8s/base/kustomization.yaml	282 bytes
+deploy/k8s/base/networkpolicy.yaml	1664 bytes
+deploy/k8s/base/pdb.yaml	404 bytes
+deploy/k8s/base/service.yaml	201 bytes
+deploy/k8s/base/serviceaccount.yaml	154 bytes
+deploy/k8s/base/worker-deployment.yaml	2909 bytes
+deploy/k8s/migration-job.example.yaml	1707 bytes
+docker-compose.yml	1776 bytes
+Dockerfile	1585 bytes
+docs/ARCHITECTURE.md	1523 bytes
+docs/AUTH.md	2016 bytes
+docs/Integration-Verification-2026-10-27.md	1693 bytes
+docs/INTEGRATIONS.md	2280 bytes
+docs/PRODUCTION.md	9602 bytes
+docs/RELEASE_CHECKLIST.md	5610 bytes
+docs/RUNBOOK.md	3482 bytes
+docs/TANDEM_TOUR_KONFID_2026-10-18.md	2594 bytes
+docs/THREAT_MODEL.md	1135 bytes
+examples/access-request.json	368 bytes
+examples/approval-policy.json	371 bytes
+examples/detector.json	287 bytes
+examples/response-proposal.json	362 bytes
+INSTALL_KONFID_TOUR_P1.cmd	390 bytes
+koali.integration.json	1399 bytes
+Launch_MULTiSmartDump.lnk	1359 bytes
+Makefile	1110 bytes
+migrations/env.py	1079 bytes
+migrations/script.py.mako	586 bytes
+migrations/versions/21d43ef07e30_initial_schema.py	28639 bytes
+migrations/versions/9c7e32d4f6a1_production_hardening.py	7440 bytes
+migrations/versions/e61c8a7d2f04_audit_export_leases.py	1182 bytes
+openapi.json	104144 bytes
+PREVIEW_KONFID_TOUR_P1.cmd	390 bytes
+pyproject.toml	901 bytes
+README.md	7096 bytes
+README_KONFID_TOUR_P1.md	1809 bytes
+ROLLBACK_KONFID_TOUR_P1.cmd	392 bytes
+scripts/dev-demo.sh	1113 bytes
+SECURITY.md	3318 bytes
+src/konfid/__init__.py	59 bytes
+src/konfid/__main__.py	29 bytes
+src/konfid/adapters/__init__.py	37 bytes
+src/konfid/adapters/audit.py	4060 bytes
+src/konfid/adapters/enforcement.py	4727 bytes
+src/konfid/adapters/http.py	7963 bytes
+src/konfid/adapters/orgo.py	1778 bytes
+src/konfid/adapters/policy.py	13512 bytes
+src/konfid/api.py	31156 bytes
+src/konfid/app.py	6279 bytes
+src/konfid/auth.py	7094 bytes
+src/konfid/cli.py	4692 bytes
+src/konfid/config.py	10858 bytes
+src/konfid/db.py	2658 bytes
+src/konfid/logging.py	1821 bytes
+src/konfid/metrics.py	860 bytes
+src/konfid/models.py	20020 bytes
+src/konfid/rate_limit.py	3437 bytes
+src/konfid/schemas.py	13205 bytes
+src/konfid/services/__init__.py	23 bytes
+src/konfid/services/access.py	4967 bytes
+src/konfid/services/approval.py	7232 bytes
+src/konfid/services/audit_export.py	5726 bytes
+src/konfid/services/audit_verify.py	2310 bytes
+src/konfid/services/bootstrap.py	1437 bytes
+src/konfid/services/detectors.py	1899 bytes
+src/konfid/services/directory.py	5563 bytes
+src/konfid/services/outbox.py	9252 bytes
+src/konfid/services/overwatch.py	4583 bytes
+src/konfid/services/response.py	12710 bytes
+src/konfid/utils.py	1707 bytes
+tests/conftest.py	452 bytes
+tests/test_access.py	4148 bytes
+tests/test_api_security.py	4361 bytes
+tests/test_approval_response.py	7308 bytes
+tests/test_config_security.py	3050 bytes
+tests/test_overwatch.py	1662 bytes
+tests/test_postgres_concurrency.py	3470 bytes
+tests/test_production_invariants.py	15666 bytes
+tests/test_tandem_koa_allow_ttl.py	3139 bytes
+tools/tandem_konfid_tour/install.py	9753 bytes
+tools/tandem_konfid_tour/manifest.json	903 bytes
+tools/tandem_konfid_tour/payload/docs/INTEGRATIONS.md	2280 bytes
+tools/tandem_konfid_tour/payload/docs/TANDEM_TOUR_KONFID_2026-10-18.md	2594 bytes
+tools/tandem_konfid_tour/payload/README.md	6830 bytes
+tools/tandem_konfid_tour/payload/src/konfid/adapters/policy.py	13512 bytes
+tools/tandem_konfid_tour/payload/tests/test_tandem_koa_allow_ttl.py	3139 bytes
+VALIDATION.md	7084 bytes
+VERIFY_KONFID_TOUR_P1.cmd	388 bytes
